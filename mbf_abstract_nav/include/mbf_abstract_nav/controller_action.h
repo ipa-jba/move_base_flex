@@ -21,6 +21,11 @@ class ControllerAction :
 
   void run(GoalHandle &goal_handle, AbstractControllerExecution &execution);
 
+  std::string cmd_vel_pub_goal_id_;
+
+  virtual void before(GoalHandle& goal_handle, AbstractControllerExecution& execution);
+  virtual void after(GoalHandle& goal_handle, AbstractControllerExecution& execution);
+
 };
 }
 

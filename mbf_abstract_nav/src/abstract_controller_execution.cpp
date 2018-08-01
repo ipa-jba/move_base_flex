@@ -51,7 +51,8 @@ namespace mbf_abstract_nav
       const boost::shared_ptr<tf::TransformListener> &tf_listener_ptr) :
       controller_(controller_ptr), tf_listener_ptr(tf_listener_ptr), state_(INITIALIZED),
       moving_(false), max_retries_(0), patience_(0),
-      calling_duration_(boost::chrono::microseconds(static_cast<int>(1e6 / DEFAULT_CONTROLLER_FREQUENCY)))
+      calling_duration_(boost::chrono::microseconds(static_cast<int>(1e6 / DEFAULT_CONTROLLER_FREQUENCY))),
+      publish_cmd_vel_(false)
   {
     ros::NodeHandle nh;
     ros::NodeHandle private_nh("~");
@@ -77,6 +78,16 @@ namespace mbf_abstract_nav
   AbstractControllerExecution::~AbstractControllerExecution()
   {
 
+  }
+
+  void AbstractControllerExecution::enablePublishCmdVel()
+  {
+    publish_cmd_vel_ = true;
+  }
+
+  void AbstractControllerExecution::disablePublishCmdVel()
+  {
+    publish_cmd_vel_ = false;
   }
 
   bool AbstractControllerExecution::setControllerFrequency(double frequency)
@@ -343,7 +354,9 @@ namespace mbf_abstract_nav
             cmd_vel_stamped.header.seq = seq++;
             setVelocityCmd(cmd_vel_stamped);
             setState(GOT_LOCAL_CMD);
-            vel_pub_.publish(cmd_vel_stamped.twist);
+            if(publish_cmd_vel_){
+              vel_pub_.publish(cmd_vel_stamped.twist);
+            }
             condition_.notify_all();
             retries = 0;
           }

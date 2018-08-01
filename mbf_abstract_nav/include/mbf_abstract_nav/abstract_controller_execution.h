@@ -135,6 +135,10 @@ namespace mbf_abstract_nav
       INTERNAL_ERROR///< An internal error occurred.
     };
 
+    void enablePublishCmdVel();
+
+    void disablePublishCmdVel();
+
     /**
      * @brief Return the current state of the controller execution. Thread communication safe.
      * @return current state, enum value of ControllerState
@@ -330,6 +334,9 @@ namespace mbf_abstract_nav
 
     //! current robot pose;
     geometry_msgs::PoseStamped robot_pose_;
+
+    //! enable publishing cmd vel
+    bool publish_cmd_vel_;
 
   };
 
