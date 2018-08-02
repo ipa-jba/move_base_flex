@@ -78,10 +78,10 @@ class AbstractAction
     execution_ptr->join();
     ROS_DEBUG_STREAM("Execution thread stopped, cleaning up the execution object map and the slot map");
     boost::lock_guard<boost::mutex> lock_guard(map_mtx_);
-    after(goal_handle, *execution_ptr);
     executions_.erase(goal_handle.getGoalID().id);
     concurrency_slots_.right.erase(goal_handle.getGoalID().id);
     goal_ids_.erase(std::remove(goal_ids_.begin(), goal_ids_.end(), goal_handle.getGoalID().id), goal_ids_.end());
+    after(goal_handle, *execution_ptr);
     ROS_DEBUG_STREAM("Exiting run method with goal status: " << goal_handle.getGoalStatus().text << " and code: "
         << static_cast<int>(goal_handle.getGoalStatus().status));
   }

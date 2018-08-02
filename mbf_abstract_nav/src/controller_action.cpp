@@ -29,20 +29,10 @@ void ControllerAction::after(GoalHandle &goal_handle, AbstractControllerExecutio
 {
   if(goal_handle.getGoalID().id == cmd_vel_pub_goal_id_ && threads_.size() > 1)
   {
-    if(goal_ids_.front() == goal_handle.getGoalID().id)
-    {
-      // current publishing execution with goal id is the first in the line so take the next one.
-      execution.disablePublishCmdVel();
-      executions_[goal_ids_[1]]->enablePublishCmdVel();
-      cmd_vel_pub_goal_id_ = goal_ids_[1];
-    }
-    else
-    {
-      // current publishing execution with goal id is not the first in the line so take the first one in the line.
-      execution.disablePublishCmdVel();
-      executions_[goal_ids_[0]]->enablePublishCmdVel();
-      cmd_vel_pub_goal_id_ = goal_ids_[0];
-    }
+    execution.disablePublishCmdVel();
+    cmd_vel_pub_goal_id_ = goal_ids_.front();
+    AbstractControllerExecution::Ptr other_exec = executions_[cmd_vel_pub_goal_id_];
+    other_exec->enablePublishCmdVel();
   }
 }
 
